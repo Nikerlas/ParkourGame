@@ -18,7 +18,13 @@ public class PlayerLocomotion : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody>();
     }
 
-    public void HandleMovement()
+    public void HandleAllMovement()
+    {
+        HandleMovement();
+        HandleRotation();
+    }
+
+    private void HandleMovement()
     {
         moveDirection = cameraObject.forward * inputManager.verticalInput;
         moveDirection = moveDirection + cameraObject.right * inputManager.horizontalInput;
@@ -30,7 +36,7 @@ public class PlayerLocomotion : MonoBehaviour
         playerRigidbody.velocity = movementVelocity;
     }
 
-    public void HandleRotation()
+    private void HandleRotation()
     {
         Vector3 targetDirection = Vector3.zero;
 
