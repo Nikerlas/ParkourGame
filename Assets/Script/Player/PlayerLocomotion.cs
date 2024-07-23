@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerLocomotion : MonoBehaviour
 {
     InputManager inputManager;
+
     Vector3 moveDirection;
     Transform cameraObject;
     Rigidbody playerRigidbody;
@@ -16,6 +17,7 @@ public class PlayerLocomotion : MonoBehaviour
     {
         inputManager = GetComponent<InputManager>();
         playerRigidbody = GetComponent<Rigidbody>();
+        cameraObject = Camera.main.transform;
     }
 
     public void HandleAllMovement()
@@ -44,6 +46,8 @@ public class PlayerLocomotion : MonoBehaviour
         targetDirection = targetDirection + cameraObject.right * inputManager.horizontalInput;
         targetDirection.Normalize();
         targetDirection.y = 0;
+
+        if(targetDirection == Vector3.zero) targetDirection = transform.forward;
         
         Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
         Quaternion playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
