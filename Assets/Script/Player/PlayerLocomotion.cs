@@ -9,7 +9,7 @@ public class PlayerLocomotion : MonoBehaviour
     Vector3 moveDirection;
     Transform cameraObject;
     Rigidbody playerRigidbody;
-
+    
     public float movementSpeed = 7;
     public float rotationSpeed = 15;
 
