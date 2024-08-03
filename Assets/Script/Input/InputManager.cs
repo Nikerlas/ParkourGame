@@ -19,6 +19,8 @@ public class InputManager : MonoBehaviour
     public float horizontalInput;
 
     public bool shiftInput;
+    public bool altInput;
+    public bool spaceInput;
 
     private void Awake()
     {
@@ -37,6 +39,11 @@ public class InputManager : MonoBehaviour
 
             playerControls.PlayerActions.Sprint.performed += i => shiftInput = true;
             playerControls.PlayerActions.Sprint.canceled += i => shiftInput = false;
+            
+            playerControls.PlayerActions.Walk.performed += i => altInput = true;
+            playerControls.PlayerActions.Walk.canceled += i => altInput = false;
+
+            playerControls.PlayerActions.Jump.performed += i => spaceInput = true;
         }
 
         playerControls.Enable();
@@ -51,6 +58,8 @@ public class InputManager : MonoBehaviour
     {
         HandleMovementInput();
         HandleSprintingInput();
+        HandleWalkingInput();
+        HandleJumpInput();
     }
 
     private void HandleMovementInput()
@@ -62,12 +71,27 @@ public class InputManager : MonoBehaviour
         cameraInputY = cameraInput.y;
 
         moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
-        animManager.UpdateAnimatorValues(0, moveAmount, playerLocomotion.isSprinting);
+        animManager.UpdateAnimatorValues(0, moveAmount, playerLocomotion.isSprinting, playerLocomotion.isWalking);
     }
 
     private void HandleSprintingInput()
     {
-        if(shiftInput && moveAmount > 0.5f) playerLocomotion.isSprinting = true;
+        if(shiftInput) playerLocomotion.isSprinting = true;
         else playerLocomotion.isSprinting = false;
+    }
+
+    private void HandleWalkingInput()
+    {
+        if(altInput) playerLocomotion.isWalking = true;
+        else playerLocomotion.isWalking = false;
+    }
+
+    private void HandleJumpInput()
+    {
+        if(spaceInput) 
+        {
+            spaceInput = false;
+            playerLocomotion.HandleJumping();
+        }
     }
 }

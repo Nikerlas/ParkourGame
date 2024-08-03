@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AnimatorManager : MonoBehaviour
 {
-    Animator anim;
+    public Animator anim;
     int horizontal;
     int vertical;
 
@@ -15,7 +15,13 @@ public class AnimatorManager : MonoBehaviour
         vertical = Animator.StringToHash("Vertical");
     }
 
-    public void UpdateAnimatorValues(float horizontalMovement, float verticalMovement, bool isSprinting)
+    public void PlayTargetAnimation(string targetAnimation, bool isInteracting)
+    {
+        anim.SetBool("isInteracting", isInteracting);
+        anim.CrossFade(targetAnimation, 0.2f);
+    }
+
+    public void UpdateAnimatorValues(float horizontalMovement, float verticalMovement, bool isSprinting, bool isWalking)
     {
         float snappedHorizontal;
         float snappedVertical;
@@ -44,25 +50,13 @@ public class AnimatorManager : MonoBehaviour
         #endregion
 
         #region VerticalMovement
-        if(verticalMovement > 0 && verticalMovement < 0.55f) 
-        {
-            snappedVertical = 0.5f;
-        } 
-        else if(verticalMovement > 0.55f) 
+        if(verticalMovement > 0.55f) 
         {
             snappedVertical = 1;
         }
-        else if(verticalMovement < 0 && verticalMovement > -0.55f) 
+        else
         {
-            snappedVertical = -0.5f;
-        }
-        else if(verticalMovement < -0.55f) 
-        {
-            snappedVertical = -1;
-        }
-        else 
-        {
-            snappedVertical = 0;
+            snappedVertical = 0.0f;
         }
         #endregion
 
@@ -70,6 +64,12 @@ public class AnimatorManager : MonoBehaviour
         {
             snappedHorizontal = horizontalMovement;
             snappedVertical = 2;
+        }
+
+        if(isWalking)
+        {
+            snappedHorizontal = horizontalMovement;
+            snappedVertical = 0.5f;
         }
 
         anim.SetFloat("Horizontal", snappedHorizontal, 0.1f, Time.deltaTime);
